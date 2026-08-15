@@ -19,8 +19,8 @@ export default function Page() {
         <>
             <SmoothScroll />
             <ScrollyCanvas />
-            <FreedomFighters />
             <MusicPlayer />
+            <FreedomFighters />
             <Colophon />
         </>
     );
