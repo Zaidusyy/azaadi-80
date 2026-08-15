@@ -29,8 +29,8 @@ const TRACK_SVH = "1000svh";
  *  this list tiny is the single biggest lever on how fast the page opens. */
 const GATE_FRAMES = [0, 115, 230];
 
-/** Parallel requests during the background fill. Past ~6 the connection thrashes. */
-const FILL_CONCURRENCY = 6;
+/** Parallel requests during the background fill. */
+const FILL_CONCURRENCY = 8;
 
 type Frame = ImageBitmap | HTMLImageElement;
 
