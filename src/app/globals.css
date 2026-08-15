@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+/* ── Midnight Tiranga ────────────────────────────────────────────────────────
+   Editorial minimal. The page is almost entirely black and almost entirely
+   empty; type carries it. The tricolor is rationed — it appears as light on the
+   flag and once more in the final burst, and nowhere else. */
+@theme {
+    --color-ink: #050506; /* page base — near-black, a hair warm  */
+    --color-ink-2: #0a0a0e;
+    --color-saffron: #ff671f; /* official flag saffron               */
+    --color-saffron-hot: #ff8a3d;
+    --color-white-warm: #f2ede4; /* paper white — never pure #fff       */
+    --color-green: #046a38; /* official India green                */
+    --color-green-lit: #0a9c53;
+    --color-chakra: #06038d; /* Ashoka navy                         */
+    --color-chakra-lit: #4b56d8;
+    --color-gold: #e0b552; /* the one warm accent                 */
+    --color-ash: #6f7385;
+
+    /* Aliases for the next/font variables, which are declared on <html> so
+       they resolve at :root alongside these. */
+    --font-display: var(--font-rozha);
+    --font-hindi: var(--font-tiro);
+    --font-urdu: var(--font-nastaliq);
+    --font-serif: var(--font-fraunces);
+    --font-sans: var(--font-inter-tight);
+    --font-mono: var(--font-plex-mono);
+
+    --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+html {
+    scroll-behavior: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+body {
+    background: var(--color-ink);
+    color: var(--color-white-warm);
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+/* Everything below is in `components` on purpose.
+   Tailwind v4 puts its utilities in a cascade layer, and unlayered CSS beats
+   *any* layer regardless of specificity. Left unlayered, `.mask-line`'s
+   `display: block` silently overrode a `inline-block` utility sitting on the
+   same element, and the hero's three clusters stacked vertically down the
+   page. In `components` these are all overridable by utilities, which is the
+   relationship a class like this should have. */
+@layer components {
+    /* ── The 9:16-safe column ───────────────────────────────────────────────
+       Every headline sits inside this, so the same page reads on a 16:9 desktop
+       and inside a 9:16 phone-frame recording. Backgrounds bleed past it. */
+    .safe-col {
+        width: min(92vw, 1180px);
+        margin-inline: auto;
+    }
+
+    /* ── Type ───────────────────────────────────────────────────────────────
+       Two registers and nothing between them: type that fills the screen and
+       type that almost disappears. The gap is what reads as editorial. */
+
+    .display-hero {
+        font-family: var(--font-display);
+        font-size: clamp(3rem, 13vw, 15rem);
+        line-height: 1.06;
+        letter-spacing: -0.02em;
+    }
+
+    .display-xl {
+        font-family: var(--font-display);
+        font-size: clamp(2.5rem, 9vw, 10rem);
+        line-height: 1.08;
+        letter-spacing: -0.018em;
+    }
+
+    .display-lg {
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 6vw, 6.5rem);
+        line-height: 1.14;
+        letter-spacing: -0.012em;
+    }
+
+    /* Devanagari carries matras above the cap height and conjuncts below the
+       baseline. Latin display leading clips both, so anything set in it gets
+       room back. */
+    .devanagari {
+        line-height: 1.24;
+        letter-spacing: 0;
+    }
+
+    .lede {
+        font-family: var(--font-hindi);
+        font-size: clamp(1rem, 1.7vw, 1.4rem);
+        line-height: 1.8;
+        color: color-mix(in oklab, var(--color-white-warm) 62%, transparent);
+    }
+
+    .kicker {
+        font-family: var(--font-mono);
+        font-size: clamp(9px, 0.72vw, 11px);
+        text-transform: uppercase;
+        letter-spacing: 0.34em;
+        line-height: 1.9;
+        color: color-mix(in oklab, var(--color-ash) 92%, transparent);
+    }
+
+    /* The kicker's wide tracking is a Latin device and it damages Indic text:
+       Devanagari and Nastaliq are joined scripts, so letter-spacing prises
+       conjuncts apart — अल्लामा renders as अ ल्ला मा. Uppercasing is meaningless
+       for them too, since neither script has case. Any kicker carrying Indic
+       text needs lang="hi" or lang="ur" for this to apply. */
+    .kicker:lang(hi),
+    .kicker:lang(ur) {
+        font-family: var(--font-hindi);
+        letter-spacing: 0.02em;
+        text-transform: none;
+        font-size: clamp(11px, 1vw, 13px);
+    }
+
+    .kicker:lang(ur) {
+        font-family: var(--font-urdu);
+        line-height: 2.2;
+    }
+
+    .rule {
+        height: 1px;
+        background: color-mix(in oklab, var(--color-ash) 34%, transparent);
+    }
+
+    /* Halation built from text-shadow rather than a filter, so it never lands
+       on the compositor's slow path during a recording. */
+    .halo-gold {
+        color: var(--color-gold);
+        text-shadow:
+            0 0 14px color-mix(in oklab, var(--color-gold) 40%, transparent),
+            0 0 52px color-mix(in oklab, var(--color-gold) 18%, transparent);
+    }
+
+    .halo-warm {
+        text-shadow:
+            0 0 18px color-mix(in oklab, var(--color-saffron) 30%, transparent),
+            0 0 74px color-mix(in oklab, var(--color-saffron) 13%, transparent);
+    }
+
+    /* Masked reveal. Indic text is only revealed by word or by line, so the
+       mask needs room for matras above and descenders below. */
+    .mask-line {
+        display: block;
+        overflow: hidden;
+        padding-block: 0.16em;
+        margin-block: -0.16em;
+    }
+
+    /* ── Photography ────────────────────────────────────────────────────────
+       Plates are graded at build time (scripts/build-photos.mjs); nothing here
+       filters them at runtime. */
+
+    .photo-bleed {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Dissolves a full-bleed photo into the page instead of ending on a hard
+       edge — the most effective single trick for making stock photography look
+       art-directed. */
+    .photo-fade {
+        -webkit-mask-image: radial-gradient(
+            ellipse 78% 68% at 50% 42%,
+            #000 40%,
+            transparent 100%
+        );
+        mask-image: radial-gradient(
+            ellipse 78% 68% at 50% 42%,
+            #000 40%,
+            transparent 100%
+        );
+    }
+
+    .vignette::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+            ellipse at 50% 45%,
+            transparent 32%,
+            color-mix(in oklab, var(--color-ink) 82%, transparent) 100%
+        );
+    }
+}
+
+/* ── Scroll reveal ───────────────────────────────────────────────────────────
+   One shared IntersectionObserver plus these two rules. */
+[data-reveal] {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 20px));
+    transition:
+        opacity 1s var(--ease-out-quint),
+        transform 1s var(--ease-out-quint);
+    transition-delay: var(--reveal-delay, 0s);
+    will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ── Portrait / 9:16 recording ───────────────────────────────────────────────
+   The breakpoint that serves phones also serves the take. Type goes up because
+   a portrait viewport is narrow, not because it is small. */
+/* ── Wave visualizer card animations (from 21st.dev SchemaCard) ──────────────
+   float: the now-playing card gently bobs — alive, never static.
+   dataStream: SVG stroke-dashoffset sweep for connection lines.
+   schemaPulse: gentle breathe on the inner glow panel.              */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-8px); }
+}
+@keyframes dataStream {
+    0%   { stroke-dashoffset: 20; }
+    100% { stroke-dashoffset: 0; }
+}
+@keyframes schemaPulse {
+    0%, 100% { transform: scale(1);    opacity: 0.8; }
+    50%       { transform: scale(1.02); opacity: 1;   }
+}
+
+/* Utility classes driven by the keyframes above */
+.animate-float        { animation: float       3.6s ease-in-out infinite; }
+.animate-schema-pulse { animation: schemaPulse 2.8s ease-in-out infinite; }
+
+/* Glass utility referenced in the original component */
+.glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* card-border: multi-layer glow border for the wave card */
+.card-border {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 8px 40px rgba(0,0,0,0.55);
+}
+
+/* gradient-border + inner-glow: the wave canvas panel frame */
+.gradient-border {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.inner-glow {
+    box-shadow: inset 0 0 30px rgba(255,255,255,0.04);
+}
+
+@media (orientation: portrait) {
+    @layer components {
+        .display-hero {
+            font-size: clamp(3rem, 21vw, 15rem);
+        }
+
+        .display-xl {
+            font-size: clamp(2.5rem, 15vw, 11rem);
+        }
+
+        .display-lg {
+            font-size: clamp(2rem, 10vw, 7rem);
+        }
+
+        .kicker {
+            font-size: 10px;
+        }
+    }
+}
