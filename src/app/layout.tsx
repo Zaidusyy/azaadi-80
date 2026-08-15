@@ -7,6 +7,7 @@ import {
     Inter_Tight,
     IBM_Plex_Mono,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 /* Six faces, each with exactly one job — see PRD §4.2. Devanagari webfonts load
@@ -87,6 +88,7 @@ export default function RootLayout({
         >
             <body className="font-sans antialiased">
                 {children}
+                <Analytics />
             </body>
         </html>
     );
